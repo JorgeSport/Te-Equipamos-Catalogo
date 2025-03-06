@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Te Equipamos - Catálogo</title>
+    <!-- Metadatos Open Graph -->
+    <meta property="og:title" content="Te Equipamos - Catálogo de Productos">
+    <meta property="og:description" content="Explora nuestra selección de productos nuevos y de segunda mano para equiparte en tus aventuras en Perú.">
+    <meta property="og:image" content="https://res.cloudinary.com/detstbpo9/image/upload/v1741256776/481293774_9248553015182208_3967286560921281850_n_cekxii.jpg">
+    <meta property="og:url" content="https://tu-sitio.com/catalogo">
+    <meta property="og:type" content="website">
+    <meta name="description" content="Catálogo de productos nuevos y de segunda mano para senderismo, trekking y más en Perú.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f0f7f0;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 25px;
+            background: #ff8c00;
+            border-radius: 5px;
+            top: 10px;
+            left: 10px;
+            clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 15px;
+            background: #ff8c00;
+            border-radius: 3px;
+            top: 0;
+            left: 15px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            color: #2f4f2f;
+            font-weight: 600;
+        }
+
+        header p {
+            font-size: 16px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .condition-menu {
+            text-align: center;
+            margin: 10px 0;
+            background: #fff;
+            padding: 10px 0;
+        }
+
+        .condition-btn {
+            padding: 8px 20px;
+            margin: 0 10px;
+            background: none;
+            color: #2f4f2f;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s, border-bottom 0.3s;
+        }
+
+        .condition-btn.active, .condition-btn:hover {
+            color: #ff8c00;
+            border-bottom: 2px solid #ff8c00;
+        }
+
+        .filter-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            margin: 10px 0;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            margin: 5px;
+            background: #2f4f2f;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: #ff8c00;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            opacity: 0;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+        .card:nth-child(6) { animation-delay: 0.6s; }
+        .card:nth-child(7) { animation-delay: 0.7s; }
+        .card:nth-child(8) { animation-delay: 0.8s; }
+        .card:nth-child(9) { animation-delay: 0.9s; }
+
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card.hidden {
+            display: none;
+        }
+
+        .card-media {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background: #f5f5f5;
+            cursor: pointer;
+        }
+
+        .card:hover .card-media {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 20px;
+            color: #2f4f2f;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .card-price {
+            font-size: 20px;
+            color: #ff8c00;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-price-old {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+            margin-bottom: 5px;
+        }
+
+        .card-savings {
+            font-size: 14px;
+            color: #ff8c00;
+            margin-bottom: 10px;
+        }
+
+        .card-condition {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .card-availability {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .card-availability.immediate {
+            color: #ff8c00;
+        }
+
+        .card-availability.delayed {
+            color: #e07b00;
+        }
+
+        .card-size {
+            font-size: 14px;
+            color: #2f4f2f;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-features {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        .card-features ul {
+            list-style: disc;
+        }
+
+        .card-features li {
+            margin: 5px 0;
+        }
+
+        .card-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .card-btn:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .card-discount {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff8c00;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+        .gallery {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 10px;
+        }
+
+        .gallery-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            font-size: 30px;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .gallery-arrow.left {
+            left: 20px;
+        }
+
+        .gallery-arrow.right {
+            right: 20px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            .card {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            .filter-btn, .condition-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .card-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            .logo-text {
+                font-size: 24px;
+            }
+            .logo-icon {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"></div>
+            <h1 class="logo-text">Te Equipamos</h1>
+        </div>
+        <div class="condition-menu">
+            <button class="condition-btn active" data-condition="all">Todos</button>
+            <button class="condition-btn" data-condition="new">Nuevo</button>
+            <button class="condition-btn" data-condition="used">Segunda Mano</button>
+        </div>
+        <p>Productos nuevos y de segunda mano para tus expediciones</p>
+    </header>
+
+    <div class="filter-container">
+        <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="hiking">Senderismo</button>
+            <button class="filter-btn" data-filter="trekking">Trekking</button>
+            <button class="filter-btn" data-filter="thermal">Térmico</button>
+            <button class="filter-btn" data-filter="urban">Urbano</button>
+        </div>
+    </div>
+
+    <div class="card-container">
+        <!-- 1. Lentes Quechua Polarizados Niños -->
+        <div class="card" data-category="new" data-type="hiking trekking" data-images='["https://res.cloudinary.com/detstbpo9/image/upload/v1741256776/481293774_9248553015182208_3967286560921281850_n_cekxii.jpg"]'>
+            <img class="card-media" src="https://res.cloudinary.com/detstbpo9/image/upload/v1741256776/481293774_9248553015182208_3967286560921281850_n_cekxii.jpg" alt="Lentes Quechua Niños" loading="lazy">
+            <div class="card-content">
+                <h3 class="card-title">Lentes Quechua Polarizados Niños</h3>
+                <p class="card-subtitle">Protección UV total</p>
+                <p class="card-price">S/125.00</p>
+                <p class="card-price-old">S/189.00</p>
+                <p class="card-savings">Ahorro: S/64.00</p>
+                <p class="card-condition">Nuevo</p>
+                <p class="card-availability delayed">Entrega en 1-2 semanas</p>
+                <p class="card-size">Talla: No aplica</p>
+                <div class="card-features">
+                    <ul>
+                        <li>Protección total UV (Categoría 4)</li>
+                        <li>Lentes polarizados anti-reflejos</li>
+                        <li>Ideal para trekking y playa</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20los%20Lentes%20Quechua%20Polarizados%20Niños%20a%20S/125.00.%20¿Puedes%20darme%20más%20detalles%20o%20reservarlos%20para%20mí?%20https://res.cloudinary.com/detstbpo9/image/upload/v1741256776/481293774_9248553015182208_3967286560921281850_n_cekxii.jpg" class="card-btn">Dudas y Reservas</a>
+                <div class="card-discount">34% OFF</div>
+            </div>
+        </div>
+
+        <!-- 2. Abrigo Quechua Niños -->
+        <div class="card" data-category="used" data-type="hiking trekking thermal" data-images='["https://res.cloudinary.com/detstbpo9/image/upload/v1741257052/480237543_9217494954954681_1528776145603063998_n_wzmxds.jpg"]'>
+            <video class="card-media" poster="https://res.cloudinary.com/detstbpo9/image/upload/v1741257052/480237543_9217494954954681_1528776145603063998_n_wzmxds.jpg" muted loading="lazy">
+                <source src="https://res.cloudinary.com/demo/video/upload/v1312461204/elephants.mp4" type="video/mp4">
+            </video>
+            <div class="card-content">
+                <h3 class="card-title">Abrigo Quechua Niños</h3>
+                <p class="card-subtitle">Calor hasta -23°C</p>
+                <p class="card-price">S/199.00</p>
+                <p class="card-price-old">S/420.00</p>
+                <p class="card-savings">Ahorro: S/ ventana221.00</p>
+                <p class="card-condition">Segunda Mano - Impecable</p>
+                <p class="card-availability immediate">Disponible en Lima</p>
+                <p class="card-size">Talla: 10/11</p>
+                <div class="card-features">
+                    <ul>
+                        <li>Térmico hasta -23°C</li>
+                        <li>Impermeable 5,000 mm</li>
+                        <li>Capucha antiventisca</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20el%20Abrigo%20Quechua%20Niños%20a%20S/199.00.%20¿Puedes%20darme%20más%20detalles%20o%20reservarlo%20para%20mí?%20https://res.cloudinary.com/detstbpo9/image/upload/v1741257052/480237543_9217494954954681_1528776145603063998_n_wzmxds.jpg" class="card-btn">Dudas y Reservas</a>
+                <div class="card-discount">52% OFF</div>
+            </div>
+        </div>
+
+        <!-- 3. Chaleco Plumón Mujer -->
+        <div class="card" data-category="used" data-type="hiking trekking thermal" data-images='["https://res.cloudinary.com/detstbpo9/image/upload/v1741257478/480375297_9208801312490712_1748166326732213860_n_plscie.jpg"]'>
+            <img class="card-media" src="https://res.cloudinary.com/detstbpo9/image/upload/v1741257478/480375297_9208801312490712_1748166326732213860_n_plscie.jpg" alt="Chaleco Plumón Mujer" loading="lazy">
+            <div class="card-content">
+                <h3 class="card-title">Chaleco Plumón Mujer</h3>
+                <p class="card-subtitle">Calor hasta -5°C</p>
+                <p class="card-price">S/155.00</p>
+                <p class="card-price-old">S/349.00</p>
+                <p class="card-savings">Ahorro: S/194.00</p>
+                <p class="card-condition">Segunda Mano - Como Nuevo</p>
+                <p class="card-availability delayed">Entrega en 1-2 semanas</p>
+                <p class="card-size">Talla: S</p>
+                <div class="card-features">
+                    <ul>
+                        <li>Plumón premium hasta -5°C</li>
+                        <li>Repelente al agua</li>
+                        <li>Súper compresible</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20el%20Chaleco%20Plumón%20Mujer%20a%20S/155.00.%20¿Puedes%20darme%20más%20detalles%20o%20reservarlo%20para%20mí?%20https://res.cloudinary.com/detstbpo9/image/upload/v1741257478/480375297_9208801312490712_1748166326732213860_n_plscie.jpg" class="card-btn">Dudas y Reservas</a>
+                <div class="card-discount">55% OFF</div>
+            </div>
+        </div>
+
+        <!-- 4. Pantalón Hombre -->
+        <div class="card" data-category="used" data-type="hiking trekking" data-images='["https://res.cloudinary.com/detstbpo9/image/upload/v1741258464/480322385_9208501062520737_1736699111552146234_n_mxqxqn.jpg"]'>
+            <img class="card-media" src="https://res.cloudinary.com/detstbpo9/image/upload/v1741258464/480322385_9208501062520737_1736699111552146234_n_mxqxqn.jpg" alt="Pantalón Hombre" loading="lazy">
+            <div class="card-content">
+                <h3 class="card-title">Pantalón Hombre Forclaz</h3>
+                <p class="card-subtitle">Convertible en short</p>
+                <p class="card-price">S/189.00</p>
+                <p class="card-price-old">S/479.00</p>
+                <p class="card-savings">Ahorro: S/290.00</p>
+                <p class="card-condition">Segunda Mano - Como Nuevo</p>
+                <p class="card-availability delayed">Entrega en 1-2 semanas</p>
+                <p class="card-size">Talla: XXL</p>
+                <div class="card-features">
+                    <ul>
+                        <li>Convertible en short</li>
+                        <li>Secado rápido y UV</li>
+                        <li>Múltiples bolsillos</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20el%20Pantalón%20Hombre%20Forclaz%20a%20S/189.00.%20¿Puedes%20darme%20más%20detalles%20o%20reservarlo%20para%20mí?%20https://res.cloudinary.com/detstbpo9/image/upload/v1741258464/480322385_9208501062520737_1736699111552146234_n_mxqxqn.jpg" class="card-btn">Dudas y Reservas</a>
+                <div class="card-discount">60% OFF</div>
+            </div>
+        </div>
+
+        <!-- 5. Pantalón Niña -->
+        <div class="card" data-category="used" data-type="hiking trekking urban" data-images='["https://res.cloudinary.com/detstbpo9/image/upload/v1741258832/480252662_9208000769237433_6198646178554017704_n_penygc.jpg"]'>
+            <img class="card-media" src="https://res.cloudinary.com/detstbpo9/image/upload/v1741258832/480252662_9208000769237433_6198646178554017704_n_penygc.jpg" alt="Pantalón Niña" loading="lazy">
+            <div class="card-content">
+                <h3 class="card-title">Pantalón Niña Quechua</h3>
+                <p class="card-subtitle">Transformable en short</p>
+                <p class="card-price">S/119.00</p>
+                <p class="card-price-old">S/189.00</p>
+                <p class="card-savings">Ahorro: S/70.00</p>
+                <p class="card-condition">Segunda Mano - Como Nuevo</p>
+                <p class="card-availability delayed">Entrega en 1-2 semanas</p>
+                <p class="card-size">Talla: 12</p>
+                <div class="card-features">
+                    <ul>
+                        <li>Transformable en short</li>
+                        <li>Secado rápido</li>
+                        <li>Cintura elástica</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20el%20Pantalón%20Niña%20Quechua%20a%20S/119.00.%20¿Puedes%20darme%20más%20detalles%20o%20reservarlo%20para%20mí?%20https://res.cloudinary.com/detstbpo9/image/upload/v1741258832/480252662_9208000769237433_6198646178554017704_n_penygc.jpg" class="card-btn">Dudas y Reservas</a>
+                <div class="card-discount">37% OFF</div>
+            </div>
+        </div>
+
+        <!-- 6. Abrigo Polar Niño -->
+        <div class="card" data-category="used" data-type="hiking trekking urban thermal" data-images='["https://res.cloudinary.com/detstbpo9/image/upload/v1741259183/480609845_9207767612594082_693093371977237738_n_a4t5va.jpg"]'>
+            <img class="card-media" src="https://res.cloudinary.com/detstbpo9/image/upload/v1741259183/480609845_9207767612594082_693093371977237738_n_a4t5va.jpg" alt="Abrigo Polar Niño" loading="lazy">
+            <div class="card-content">
+                <h3 class="card-title">Abrigo Polar Niño Forclaz</h3>
+                <p class="card-subtitle">Reversible y repelente</p>
+                <p class="card-price">S/139.00</p>
+                <p class="card-price-old">S/209.00</p>
+                <p class="card-savings">Ahorro: S/70.00</p>
+                <p class="card-condition">Segunda Mano - Como Nuevo</p>
+                <p class="card-availability immediate">Disponible en Lima</p>
+                <p class="card-size">Talla: 10</p>
+                <div class="card-features">
+                    <ul>
+                        <li>Reversible (gris/amarillo)</li>
+                        <li>Repelente al agua</li>
+                        <li>Alta visibilidad</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20el%20Abrigo%20Polar%20Niño%20Forclaz%20a%20S/139.00.%20¿Puedes%20darme%20más%20detalles%20o%20reservarlo%20para%20mí?%20https://res.cloudinary.com/detstbpo9/image/upload/v1741259183/480609845_9207767612594082_693093371977237738_n_a4t5va.jpg" class="card-btn">Dudas y Reservas</a>
+                <div class="card-discount">33% OFF</div>
+            </div>
+        </div>
+
+        <!-- 7. Abrigo Mujer -->
+        <div class="card" data-category="used" data-type="hiking trekking urban" data-images='["https://res.cloudinary.com/detstbpo9/image/upload/v1741261486/480072966_9183632675007576_2824803935011832667_n_sfd7z8.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741261485/480441048_9183632845007559_2765966664914700645_n_mx98lt.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741260654/480441048_9183632845007559_2765966664914700645_n_1_swrzhg.jpg"]'>
+            <img class="card-media" src="https://res.cloudinary.com/detstbpo9/image/upload/v1741261486/480072966_9183632675007576_2824803935011832667_n_sfd7z8.jpg" alt="Abrigo Mujer" loading="lazy">
+            <div class="card-content">
+                <h3 class="card-title">Abrigo Mujer Forclaz</h3>
+                <p class="card-subtitle">Calor de 5°C a -5°C</p>
+                <p class="card-price">S/145.00</p>
+                <p class="card-price-old">S/289.00</p>
+                <p class="card-savings">Ahorro: S/144.00</p>
+                <p class="card-condition">Segunda Mano - Como Nuevo</p>
+                <p class="card-availability immediate">Disponible en Lima</p>
+                <p class="card-size">Talla: M</p>
+                <div class="card-features">
+                    <ul>
+                        <li>Cómodo entre 5°C y -5°C</li>
+                        <li>Se dobla en su bolsillo izquierdo</li>
+                        <li>Efecto perlante resistente al agua</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20el%20Abrigo%20Mujer%20Forclaz%20a%20S/145.00.%20¿Puedes%20darme%20más%20detalles%20o%20reservarlo%20para%20mí?%20https://res.cloudinary.com/detstbpo9/image/upload/v1741261486/480072966_9183632675007576_2824803935011832667_n_sfd7z8.jpg" class="card-btn">Dudas y Reservas</a>
+                <div class="card-discount">50% OFF</div>
+            </div>
+        </div>
+
+        <!-- 8. Mochila Senderismo 30 Litros -->
+        <div class="card" data-category="used" data-type="hiking trekking urban" data-images='["https://res.cloudinary.com/detstbpo9/image/upload/v1741263994/473081460_8996291997074979_3860389319875615061_n_v44ftn.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741263994/473010318_8996291887074990_8294458738278423561_n_i6swer.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741263997/473573481_8996291837074995_6819205886474722646_n_qz7jhc.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741263997/473427255_8996291760408336_124174888194160588_n_xx18bg.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741264000/473572805_8996291650408347_5345161864752225354_n_wd677p.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741264002/473074830_8996291593741686_5051029429082076272_n_cmyah4.jpg"]'>
+            <img class="card-media" src="https://res.cloudinary.com/detstbpo9/image/upload/v1741263994/473081460_8996291997074979_3860389319875615061_n_v44ftn.jpg" alt="Mochila Senderismo 30 Litros" loading="lazy">
+            <div class="card-content">
+                <h3 class="card-title">Mochila Senderismo 30 Litros Quechua</h3>
+                <p class="card-subtitle">Espalda Air Cooling</p>
+                <p class="card-price">S/179.00</p>
+                <p class="card-price-old">S/289.00</p>
+                <p class="card-savings">Ahorro: S/110.00</p>
+                <p class="card-condition">Segunda Mano - Impecable</p>
+                <p class="card-availability immediate">Disponible en Lima</p>
+                <p class="card-size">Talla: 30 Litros</p>
+                <div class="card-features">
+                    <ul>
+                        <li>Tecnología Air Cooling en espalda</li>
+                        <li>Repelente a lluvia fina</li>
+                        <li>Máxima resistencia y ligereza</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20la%20Mochila%20Senderismo%2030%20Litros%20Quechua%20a%20S/179.00.%20¿Puedes%20darme%20más%20detalles%20o%20reservarla%20para%20mí?%20https://res.cloudinary.com/detstbpo9/image/upload/v1741263994/473081460_8996291997074979_3860389319875615061_n_v44ftn.jpg" class="card-btn">Dudas y Reservas</a>
+                <div class="card-discount">38% OFF</div>
+            </div>
+        </div>
+
+        <!-- 9. Casaca Térmica Ultra Ligera -->
+        <div class="card" data-category="used" data-type="hiking trekking urban thermal" data-images='["https://res.cloudinary.com/detstbpo9/image/upload/v1741265006/474378667_9044631235574388_7111852728792580073_n_yijdqs.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741265006/474108544_9044631368907708_4232567714870401654_n_fs2zmt.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741265006/474186281_9044631312241047_2326618572301813462_n_trh5z6.jpg", "https://res.cloudinary.com/detstbpo9/image/upload/v1741265006/474128394_9044631442241034_4503909754988914964_n_dmpeil.jpg"]'>
+            <img class="card-media" src="https://res.cloudinary.com/detstbpo9/image/upload/v1741265006/474378667_9044631235574388_7111852728792580073_n_yijdqs.jpg" alt="Casaca Térmica Ultra Ligera" loading="lazy">
+            <div class="card-content">
+                <h3 class="card-title">Casaca Térmica Ultra Ligera Quechua</h3>
+                <p class="card-subtitle">Máximo calor ligero</p>
+                <p class="card-price">S/119.00</p>
+                <p class="card-price-old">S/249.00</p>
+                <p class="card-savings">Ahorro: S/130.00</p>
+                <p class="card-condition">Segunda Mano - Como Nuevo</p>
+                <p class="card-availability immediate">Disponible en Lima</p>
+                <p class="card-size">Talla: S</p>
+                <div class="card-features">
+                    <ul>
+                        <li>Calor: 210 g/m², cuello alto</li>
+                        <li>Transpirable: RET = 8</li>
+                        <li>Ideal para 10-13°C</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20la%20Casaca%20Térmica%20Ultra%20Ligera%20Quechua%20a%20S/119.00.%20¿Puedes%20darme%20más%20detalles%20o%20reservarla%20para%20mí?%20https://res.cloudinary.com/detstbpo9/image/upload/v1741265006/474378667_9044631235574388_7111852728792580073_n_yijdqs.jpg" class="card-btn">Dudas y Reservas</a>
+                <div class="card-discount">52% OFF</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="mediaModal">
+        <span class="modal-close" id="modalClose">×</span>
+        <div class="modal-content" id="modalContent">
+            <button class="gallery-arrow left" id="galleryLeft"><</button>
+            <div class="gallery" id="gallery"></div>
+            <button class="gallery-arrow right" id="galleryRight">></button>
+        </div>
+    </div>
+
+    <script>
+        const conditionButtons = document.querySelectorAll('.condition-btn');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.card');
+        let activeCondition = 'all';
+        let activeFilter = 'all';
+
+        function updateView() {
+            cards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                const types = card.getAttribute('data-type').split(' ');
+                const matchesCondition = activeCondition === 'all' || activeCondition === category;
+                const matchesFilter = activeFilter === 'all' || types.includes(activeFilter);
+                if (matchesCondition && matchesFilter) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        conditionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                conditionButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                activeCondition = button.getAttribute('data-condition');
+                updateView();
+            });
+        });
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                activeFilter = button.getAttribute('data-filter');
+                updateView();
+            });
+        });
+
+        const modal = document.getElementById('mediaModal');
+        const modalContent = document.getElementById('modalContent');
+        const gallery = document.getElementById('gallery');
+        const galleryLeft = document.getElementById('galleryLeft');
+        const galleryRight = document.getElementById('galleryRight');
+        const modalClose = document.getElementById('modalClose');
+        const mediaElements = document.querySelectorAll('.card-media');
+        let currentImages = [];
+        let currentIndex = 0;
+
+        mediaElements.forEach(media => {
+            media.addEventListener('click', () => {
+                const card = media.closest('.card');
+                currentImages = JSON.parse(card.getAttribute('data-images') || '["' + media.src + '"]');
+                currentIndex = 0;
+                modal.style.display = 'flex';
+                updateGallery();
+            });
+        });
+
+        function updateGallery() {
+            gallery.innerHTML = `<img src="${currentImages[currentIndex]}" alt="Producto">`;
+            galleryLeft.style.display = currentImages.length > 1 ? 'block' : 'none';
+            galleryRight.style.display = currentImages.length > 1 ? 'block' : 'none';
+        }
+
+        galleryLeft.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+            updateGallery();
+        });
+
+        galleryRight.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % currentImages.length;
+            updateGallery();
+        });
+
+        modalClose.addEventListener('click', () => {
+            modal.style.display = 'none';
+            gallery.innerHTML = '';
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                gallery.innerHTML = '';
+            }
+        });
+
+        updateView();
+    </script>
+</body>
+</html>
